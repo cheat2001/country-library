@@ -1,12 +1,25 @@
-﻿namespace CountryLibrary.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+
+namespace CountryLibrary.Models
 {
     public class TeamMember
     {
-        public int Id { get; set; }
+        [JsonPropertyName("Name")]
         public string Name { get; set; }=string.Empty;
+
+        [JsonPropertyName("Gender")]
         public string Gender { get; set; } = string.Empty;
+
+        [JsonPropertyName("Age")]
         public int Age { get; set; }
+
+        [JsonPropertyName("Address")]
         public string Address { get; set; } = string.Empty;
+
+        [JsonPropertyName("Email")]
         public string Email { get; set; } = string.Empty;
     }
 }
