@@ -1,4 +1,5 @@
-﻿using CountryLibrary.Repositories;
+﻿using CountryLibrary.Models;
+using CountryLibrary.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace CountryLibrary.Controllers
         }
 
         [HttpGet("GetTeamMembers")]
-        public ActionResult GetTeamMember() {
+        public ActionResult<List<TeamMember>> GetTeamMember() {
             return Ok(_teamService.GetTeamMembers());
         }
     }

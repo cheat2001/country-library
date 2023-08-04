@@ -22,5 +22,9 @@ namespace CountryLibrary.Models
         [JsonPropertyName("Timezones")]
         public string[] Timezones { get; set; }
 
+        [JsonPropertyName("Region")]
+        public string Region { get; set; }
+
+
     }
 }

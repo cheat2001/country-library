@@ -1,43 +1,39 @@
-﻿using CountryLibrary.Models;
-using Newtonsoft.Json;
-using System.Net.Http;
+﻿using Azure;
+using CountryLibrary.Models;
+using CountryLibrary.Repositories;
 using System.Text.Json;
 
 namespace CountryLibrary.Services
 {
     public class CountryService : ICountryService
     {
-        private readonly HttpClient _httpClient;
-        public CountryService() {
-            _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new System.Uri("https://restcountries.com/v2/");
+        private readonly ICountryRepository _countryRepository;
+        public CountryService(ICountryRepository countryRepository) {
+
+            _countryRepository = countryRepository;
         }
 
         public async Task<CountryInfo> GetCountryByName(string countryName)
         {
-            var response = await _httpClient.GetAsync($"name/{countryName}");
-            if (!response.IsSuccessStatusCode)
-            {
-                return null;
-            }
-
-            var json = await response.Content.ReadAsStringAsync();
-            //return JsonSerializer.Deserialize<List<CountryInfo>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })[0];
-            
-            return JsonConvert.DeserializeObject<List<CountryInfo>>(json)[0];
+           var country = await _countryRepository.GetCountryByName(countryName);
+           return country;
         }
+
         public async Task<List<CountryInfo>> GetCountryByArea(AreaInfo areaInfo)
         {
-      
-           var response = await _httpClient.GetAsync($"region/{areaInfo.Region}");
-
-            if (!response.IsSuccessStatusCode)
+            var allCountries = await _countryRepository.GetCountryByRegion(areaInfo.Region);
+            if (allCountries != null)
             {
-                return null;
+                var filterCountries = allCountries.Where(country => country.Timezones.Contains(areaInfo.TimeZones)).ToList();
+                if(filterCountries.Count() > 0) {
+                    return filterCountries;
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            var json = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<List<CountryInfo>>(json);
+            return null;
         }
 
         
